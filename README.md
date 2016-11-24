@@ -1,1 +1,2 @@
-# CloudClipboard_MessageQServer
+# AmazonFresh_MessageQServer
+Rabbit MQ server for AmazonFresh
