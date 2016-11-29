@@ -22,3 +22,4 @@ exports.copy=function(msg, callback) {
     }
     db.insertOne("Clipboard", insertJSON, callbackFunction);
 }
+
