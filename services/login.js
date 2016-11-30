@@ -1,4 +1,4 @@
-
+var mac = require('getmac');
 var db = require("./database/dynamoDB");
 
 exports.doLogin=function(msg, callback) {
@@ -35,4 +35,19 @@ exports.doSignup=function(msg, callback) {
         }
     }
     db.insertOne("Users", msg, callbackFunction);
+}
+
+exports.addMacAddr = function(msg,callback){
+    var callbackFunction = function (err, result) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log(result);
+            var jsonResponse={"userDetails":result};
+            //res.customerDetails=result;
+            callback(null, jsonResponse);
+        }
+    }
+    db.findAndAdd("registered_devices", msg, callbackFunction);
 }
