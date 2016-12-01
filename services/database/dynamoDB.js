@@ -69,21 +69,7 @@ exports.findAndAdd = function(tableName,queryJSON,callback){
           console.log(data);
           if(JSON.stringify(data,null,2) == "{}"){
               console.log("---->>>>");
-                var params = {
-                  TableName: tableName,
-                  Item:queryJSON
-                };
-
-                console.log("Adding a new mac...");
-                console.log(params);
-                docClient.put(params, function(err, data) {
-                if (err) {
-                  console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-                } else {
-                  console.log("Added item:", JSON.stringify(data, null, 2));
-                  callback(null,data);
-                }
-              });
+                
 
 
   console.log("queryJSON:"+ queryJSON.email_mac);
@@ -140,12 +126,28 @@ exports.findAndAdd = function(tableName,queryJSON,callback){
 								else
 								{
 									console.log("Queue attributes set successfully");
-									sqs_sns_inititate.writeConfigFile(config, function (err, results) {
-								        if(err)
-										{
-											throw err;
-										}
-								    });
+								var params = {
+                  TableName: tableName,
+                  Item:{
+                      "email_mac":queryJSON.email_mac,
+                      "email" : queryJSON.email,
+                      "mac" : queryJSON.mac,
+                      "queue_url" : config.QueueUrl,
+                      "topic_arn" : config.TopicArn,
+                      "queue_arn" : config.QueueArn
+                  }
+                };
+
+                console.log("Adding a new mac...");
+                console.log(params);
+                docClient.put(params, function(err, data) {
+                if (err) {
+                  console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+                } else {
+                  console.log("Added item:", JSON.stringify(data, null, 2));
+                  callback(null,data);
+                }
+              });
 
 								}
 						    });

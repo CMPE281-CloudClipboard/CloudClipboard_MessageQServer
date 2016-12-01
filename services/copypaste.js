@@ -20,6 +20,8 @@ exports.copy=function(msg, callback) {
             callback(null, jsonResponse);
         }
     }
+
+    
     db.insertOne("Clipboard", insertJSON, callbackFunction);
 }
 
