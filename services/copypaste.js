@@ -36,26 +36,26 @@ exports.copy=function(msg, callback) {
 
             result.Items.forEach(function(record){
                 console.log(record);
+                if(record.email==msg.email){
+                    var publishParams = { 
+                          TopicArn : record.topic_arn,
+                          Message: msg.text
+                      };
 
-                var publishParams = { 
-                      TopicArn : record.topic_arn,
-                      Message: msg.text
-                  };
 
+                    sqs_sns_publish.publish(publishParams, function (err, results) {
+                    //console.log(copiedText);
+                    if(err)
+                    {
+                        throw err;
+                    }
+                    else
+                    {
+                        // console.log("Message has been successfully published");
+                    }
 
-                sqs_sns_publish.publish(publishParams, function (err, results) {
-                //console.log(copiedText);
-                if(err)
-                {
-                    throw err;
-                }
-                else
-                {
-                    // console.log("Message has been successfully published");
-                }
-
-            });
-
+                });
+            }
             });
 
 
