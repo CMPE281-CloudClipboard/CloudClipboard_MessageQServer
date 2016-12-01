@@ -38,18 +38,7 @@ exports.find = function(tableName,queryJSON,callback){
 	console.log(queryJSON);
 	var params = {
      	TableName: 'registered_devices',
-     	"ReturnConsumedCapacity": "TOTAL",
-     	"FilterExpression": queryJSON
-    	//"ExpressionAttributeValues": {":val": {"S": "joe@example.com"}}
-     	//ExpressionAttributeValues : queryJSON
-     /*	KeyConditionExpression: "#yr = :yyyy",
-    ExpressionAttributeNames:{
-        "#yr": "email"
-    },
-    ExpressionAttributeValues: {
-        ":yyyy":'gaurav@gmail.com'
-    }*/
-            /* more items */
+     	"ReturnConsumedCapacity": "TOTAL"
     };
 
 
@@ -59,7 +48,7 @@ exports.find = function(tableName,queryJSON,callback){
         	console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
     	}
     	else {
-        	console.log("GetItem succeeded:", JSON.stringify(data));
+        	//console.log("GetItem succeeded:", JSON.stringify(data));
         	callback(null,data);
     	}
 	});
@@ -94,7 +83,7 @@ exports.findAndAdd = function(tableName,queryJSON,callback){
   console.log(queryJSON.email_mac);
   var params = {
       TableName: tableName,
-      Key:{"email_mac" : queryJSON.email_mac ,"email" : queryJSON.email_mac}
+      Key:{"email_mac" : queryJSON.email_mac}
    };
 
     docClient.get(params, function(err, data) {
@@ -141,17 +130,17 @@ exports.findAndAdd = function(tableName,queryJSON,callback){
 						{
 							config.QueueArn = results;
 							console.log("Fetched queue attributes");
-							// sqs_sns_inititate.snsSubscribe(config.TopicArn, config.QueueArn, function (err, results) {
-						  //       if(err)
-							// 	{
-							// 		throw err;
-							// 	}
-							// 	else
-							// 	{
-							// 		console.log("Successfully subscribed");
+							 sqs_sns_inititate.snsSubscribe(config.TopicArn, config.QueueArn, function (err, results) {
+						         if(err)
+							 	{
+							 		throw err;
+							 	}
+							 	else
+							 	{
+							 		console.log("Successfully subscribed");
 
-							// 	}
-						  //   });
+							 	}
+						     });
 
 
 						    sqs_sns_inititate.setQueueAttr(config.QueueUrl, config.TopicArn, config.QueueArn, function (err, results) {
