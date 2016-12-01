@@ -1,6 +1,9 @@
 var AWS = require("aws-sdk");
 var key = require('./key');
 
+// SNS-SQS
+var sqs_sns_inititate = require('./create');
+
 AWS.config.update({
   region: "us-west-2",
   accessKeyId: key.keyJSON.accessKeyId,  // can omit access key and secret key
@@ -81,6 +84,74 @@ exports.findAndAdd = function(tableName,queryJSON,callback){
                   callback(null,data);
                 }
               });
+
+
+  var queueName = queryJSON.email_mac;
+	// SNS - SQS Code
+	sqs_sns_inititate.createTopic(queueName, function (err, results) {
+        if(err)
+		{
+			throw err;
+		}
+		else
+		{
+			config.TopicArn = results;
+			console.log("Topic created");
+			sqs_sns_inititate.createQueue(queueName, function (err, results) {
+		        if(err)
+				{
+					throw err;
+				}
+				else
+				{
+					config.QueueUrl = results;
+					console.log("URL:"+results);
+					console.log("Queue created");
+					sqs_sns_inititate.getQueueAttr(config.QueueUrl, function (err, results) {
+				        if(err)
+						{
+							throw err;
+						}
+						else
+						{
+							config.QueueArn = results;
+							console.log("Fetched queue attributes");
+							// sqs_sns_inititate.snsSubscribe(config.TopicArn, config.QueueArn, function (err, results) {
+						  //       if(err)
+							// 	{
+							// 		throw err;
+							// 	}
+							// 	else
+							// 	{
+							// 		console.log("Successfully subscribed");
+
+							// 	}
+						  //   });
+
+
+						    sqs_sns_inititate.setQueueAttr(config.QueueUrl, config.TopicArn, config.QueueArn, function (err, results) {
+						        if(err)
+								{
+									throw err;
+								}
+								else
+								{
+									console.log("Queue attributes set successfully");
+									sqs_sns_inititate.writeConfigFile(config, function (err, results) {
+								        if(err)
+										{
+											throw err;
+										}
+								    });
+
+								}
+						    });
+						}
+				    });
+				}
+		    });
+		}
+    });     
             
         }
           else{
