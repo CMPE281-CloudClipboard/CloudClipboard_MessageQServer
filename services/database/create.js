@@ -1,7 +1,7 @@
 var AWS = require('aws-sdk'); 
 var util = require('util');
 var fs = require('fs');
-var key = require('./key-AWS');
+var key = require('../../key-AWS');
 
 //configure AWS
 AWS.config.update({
