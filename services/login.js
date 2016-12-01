@@ -28,13 +28,38 @@ exports.doSignup=function(msg, callback) {
             console.log(err);
         }
         else {
-            console.log(result);
+            console.log("Signup"+result);
+            var callbackFunctionMac = function (err, result) {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log("MAC "+result);
+                    var jsonResponse={"userDetails":result};
+                    callback(null, jsonResponse);
+                }
+            }
+
+            db.insertOne("registered_devices", msg.macJSON, callbackFunctionMac);
+
             var jsonResponse={"userDetails":result};
+        /*var callbackFunction = function (err, result) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                console.log(result);
+                var jsonResponse={"userDetails":result};
+                //res.customerDetails=result;
+                callback(null, jsonResponse);
+            }
+        }
+        db.findOne("registered_devices", msg.macJSON.email_mac, callbackFunction);*/
             //res.customerDetails=result;
             callback(null, jsonResponse);
         }
     }
-    db.insertOne("Users", msg, callbackFunction);
+    db.insertOne("Users", msg.signupJSON, callbackFunction);
 }
 
 exports.addMacAddr = function(msg,callback){
