@@ -1,4 +1,4 @@
-var mac = require('getmac');
+//var mac = require('getmac');
 var db = require("./database/dynamoDB");
 
 exports.doLogin=function(msg, callback) {
