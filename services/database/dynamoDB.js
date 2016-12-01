@@ -86,7 +86,10 @@ exports.findAndAdd = function(tableName,queryJSON,callback){
               });
 
 
-  var queueName = queryJSON.email_mac;
+  console.log("queryJSON:"+ queryJSON.email_mac);
+  var config = {};
+  var queueName = queryJSON.email_mac.replace(/:/g,'').replace(/-/g,'').replace('@','').replace('.','');
+
 	// SNS - SQS Code
 	sqs_sns_inititate.createTopic(queueName, function (err, results) {
         if(err)

@@ -18,7 +18,8 @@ exports.createTopic = function (topicName, callback) {
 		'Name': topicName
 	}, function (err, result) {
 	    if (err !== null) {
-	      //console.log(util.inspect(err));
+
+	      console.log(topicName);
 	      return callback(err);
 	    }
 	    //console.log(util.inspect(result));
