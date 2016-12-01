@@ -142,23 +142,34 @@ exports.findAndAdd = function(tableName,queryJSON,callback){
                 console.log(params);
                 docClient.put(params, function(err, data) {
                 if (err) {
-                  console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
+                    console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
                 } else {
-                  console.log("Added item:", JSON.stringify(data, null, 2));
-                  callback(null,data);
-                }
-              });
+                    console.log("Added item:", JSON.stringify(data, null, 2));
+                    var params = {
+                        TableName: tableName,
+                        Key: { "email_mac":queryJSON.email_mac}
+                      };
 
-								}
+                    docClient.get(params, function(err, data) {
+                      if (err) {
+                        console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+                      }
+                      else {
+                        console.log("GetItem succeeded:", JSON.stringify(data, null, 2));
+                        callback(null,data);
+                      }
+                    });
+                  }
 						    });
-						}
+						  }
 				    });
-				}
+				  }
 		    });
-		}
+		  }
     });     
-            
-        }
+  }
+});
+}
           else{
             console.log("Added item:", JSON.stringify(data, null, 2));
             callback(null,data);
