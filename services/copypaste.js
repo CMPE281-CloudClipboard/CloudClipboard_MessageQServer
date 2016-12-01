@@ -23,5 +23,24 @@ exports.copy=function(msg, callback) {
 
     
     db.insertOne("Clipboard", insertJSON, callbackFunction);
+
+
+
+    var selectQuery = "email ="+ msg.email;
+    var callbackFunction = function(err, result) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log(result);
+            //var jsonResponse={"select results":result};
+            //res.customerDetails=result;
+            
+        }
+    }
+
+    db.find("registered_devices",selectQuery,callbackFunction);
+
+
 }
 

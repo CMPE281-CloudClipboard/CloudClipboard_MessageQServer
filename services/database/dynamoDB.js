@@ -9,7 +9,7 @@ AWS.config.update({
   accessKeyId: key.keyJSON.accessKeyId,  // can omit access key and secret key
   secretAccessKey: key.keyJSON.secretAccessKey
 });
-
+//AWS.config.paramValidation = false;
 var docClient = new AWS.DynamoDB.DocumentClient()
 
 exports.findOne = function(tableName,queryJSON,callback){
@@ -31,6 +31,42 @@ exports.findOne = function(tableName,queryJSON,callback){
     	}
 	});
 }
+
+
+exports.find = function(tableName,queryJSON,callback){
+	console.log("In Find");
+	console.log(queryJSON);
+	var params = {
+     	TableName: 'registered_devices',
+     	"ReturnConsumedCapacity": "TOTAL",
+     	"FilterExpression": queryJSON
+    	//"ExpressionAttributeValues": {":val": {"S": "joe@example.com"}}
+     	//ExpressionAttributeValues : queryJSON
+     /*	KeyConditionExpression: "#yr = :yyyy",
+    ExpressionAttributeNames:{
+        "#yr": "email"
+    },
+    ExpressionAttributeValues: {
+        ":yyyy":'gaurav@gmail.com'
+    }*/
+            /* more items */
+    };
+
+
+	console.log(params);
+    docClient.scan(params, function(err, data) {
+    	if (err) {
+        	console.error("Unable to read item. Error JSON:", JSON.stringify(err, null, 2));
+    	}
+    	else {
+        	console.log("GetItem succeeded:", JSON.stringify(data));
+        	callback(null,data);
+    	}
+	});
+
+}
+
+
 
 exports.insertOne = function(tableName,queryJSON,callback){
 
@@ -58,7 +94,7 @@ exports.findAndAdd = function(tableName,queryJSON,callback){
   console.log(queryJSON.email_mac);
   var params = {
       TableName: tableName,
-      Key:{"email_mac" : queryJSON.email_mac}
+      Key:{"email_mac" : queryJSON.email_mac ,"email" : queryJSON.email_mac}
    };
 
     docClient.get(params, function(err, data) {
